@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: influx
+  namespace: argocd
+spec:
+  destination:
+    namespace: influx
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    helm:
+      parameters:
+      - name: service.type
+        value: LoadBalancer
+      - name: service.port
+        value: "8889"
+      - name: adminUser.password
+        value: none
+      - name: adminUser.token
+        value: none
+    path: charts/influxdb2
+    repoURL: https://github.com/influxdata/helm-charts.git
+    targetRevision: influxdb2-2.1.0
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
